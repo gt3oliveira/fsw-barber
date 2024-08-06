@@ -1,6 +1,6 @@
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar"
 import { Card, CardContent } from "./ui/card"
 import { Badge } from "./ui/badge"
+import { Avatar, AvatarImage } from "./ui/avatar"
 
 export function BookingItem() {
   return (
