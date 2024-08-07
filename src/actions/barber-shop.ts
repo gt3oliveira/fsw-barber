@@ -17,5 +17,8 @@ export async function getBarberShopById(id: string) {
     where: {
       id,
     },
+    include: {
+      service: true,
+    },
   })
 }

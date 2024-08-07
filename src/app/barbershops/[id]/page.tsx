@@ -1,7 +1,9 @@
 import { getBarberShopById } from "@/actions/barber-shop"
-import Footer from "@/components/footer"
+import { PhoneItem } from "@/components/phone-item"
+import { ServiceItem } from "@/components/service-item"
 import { Button } from "@/components/ui/button"
 import { description } from "@/constants/types"
+import { BarbershopService } from "@prisma/client"
 import { ArrowLeft, MapPin, MenuIcon, Star } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -64,13 +66,25 @@ export default async function BarberShopPage({ params }: BarberShopPageProps) {
         <p className="text-justify text-sm">{description}</p>
       </div>
 
-      <div className="flex w-full flex-col gap-y-2 border-b border-solid p-5">
+      <div className="flex w-full flex-col gap-y-3 border-b border-solid p-5">
         <h2 className="text-xs font-semibold uppercase text-zinc-400">
           Serviços
         </h2>
+
+        {barberShop.service.map((service: BarbershopService) => (
+          <ServiceItem key={service.id} service={service} />
+        ))}
       </div>
 
-      <Footer />
+      <div className="flex w-full flex-col gap-y-2 p-5">
+        <h2 className="text-xs font-semibold uppercase text-zinc-400">
+          Contatos
+        </h2>
+
+        {barberShop.phones.map((phone, index) => (
+          <PhoneItem key={index} phone={phone} />
+        ))}
+      </div>
     </main>
   )
 }

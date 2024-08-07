@@ -1,6 +1,5 @@
 import { getBarberShop, getPopularBarberShop } from "@/actions/barber-shop"
 import { BarberShopItem } from "@/components/barber-shop-item"
-import Footer from "@/components/footer"
 import Header from "@/components/Header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -78,7 +77,6 @@ export default async function Home() {
           ))}
         </div>
       </div>
-      <Footer />
     </div>
   )
 }
