@@ -1,7 +1,9 @@
 import { getBarberShopById } from "@/actions/barber-shop"
 import { PhoneItem } from "@/components/phone-item"
 import { ServiceItem } from "@/components/service-item"
+import SidebarSheet from "@/components/sidebar-sheet"
 import { Button } from "@/components/ui/button"
+import { Sheet, SheetTrigger } from "@/components/ui/sheet"
 import { description } from "@/constants/types"
 import { BarbershopService } from "@prisma/client"
 import { ArrowLeft, MapPin, MenuIcon, Star } from "lucide-react"
@@ -39,11 +41,14 @@ export default async function BarberShopPage({ params }: BarberShopPageProps) {
             </Link>
           </Button>
 
-          <Button asChild variant={"secondary"} size={"icon"}>
-            <Link href={`/`}>
-              <MenuIcon size={16} />
-            </Link>
-          </Button>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button size={"icon"} variant={"secondary"}>
+                <MenuIcon size={16} />
+              </Button>
+            </SheetTrigger>
+            <SidebarSheet />
+          </Sheet>
         </div>
       </div>
 
