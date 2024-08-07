@@ -11,3 +11,11 @@ export async function getPopularBarberShop() {
     },
   })
 }
+
+export async function getBarberShopById(id: string) {
+  return await db.barbershop.findUnique({
+    where: {
+      id,
+    },
+  })
+}
