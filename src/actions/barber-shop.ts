@@ -23,13 +23,34 @@ export async function getBarberShopById(id: string) {
   })
 }
 
-export async function getBarberShopByName(name: string) {
+export async function getBarberShopByNameOrService(
+  search?: string,
+  service?: string,
+) {
   return await db.barbershop.findMany({
     where: {
-      name: {
-        contains: name,
-        mode: "insensitive",
-      },
+      OR: [
+        search
+          ? {
+              name: {
+                contains: search,
+                mode: "insensitive",
+              },
+            }
+          : {},
+        service
+          ? {
+              service: {
+                some: {
+                  name: {
+                    contains: service,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            }
+          : {},
+      ],
     },
   })
 }

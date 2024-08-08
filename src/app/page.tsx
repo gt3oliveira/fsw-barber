@@ -6,6 +6,7 @@ import Image from "next/image"
 import { quickSearchOptions } from "@/constants/types"
 import { BookingItem } from "@/components/booking-item"
 import { InputSearch } from "@/components/input-search"
+import Link from "next/link"
 // drop-shadow-[0_0_0.5rem_#ffffff70]
 
 export default async function Home() {
@@ -16,8 +17,14 @@ export default async function Home() {
     <div>
       <Header />
       <div className="p-5">
-        <h2 className="text-xl font-bold">Olá Gustavo!</h2>
-        <p>Segunda, 5 de agosto</p>
+        <h2 className="text-xl font-bold">Olá, Gustavo Tavares!</h2>
+        <p>
+          {new Date().toLocaleDateString("pt-BR", {
+            weekday: "long",
+            day: "2-digit",
+            month: "long",
+          })}
+        </p>
 
         <div className="my-6 flex items-center gap-x-2">
           <InputSearch />
@@ -29,14 +36,17 @@ export default async function Home() {
               key={option.title}
               variant={"secondary"}
               className="flex items-center gap-2 px-4 py-2"
+              asChild
             >
-              <Image
-                src={option.imageUrl}
-                alt={option.title}
-                width={18}
-                height={18}
-              />
-              <p>{option.title}</p>
+              <Link href={`/barbershops?service=${option.title}`}>
+                <Image
+                  src={option.imageUrl}
+                  alt={option.title}
+                  width={16}
+                  height={16}
+                />
+                {option.title}
+              </Link>
             </Button>
           ))}
         </div>
