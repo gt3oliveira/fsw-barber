@@ -2,11 +2,10 @@ import { getBarberShop, getPopularBarberShop } from "@/actions/barber-shop"
 import { BarberShopItem } from "@/components/barber-shop-item"
 import Header from "@/components/Header"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { SearchIcon } from "lucide-react"
 import Image from "next/image"
 import { quickSearchOptions } from "@/constants/types"
 import { BookingItem } from "@/components/booking-item"
+import { InputSearch } from "@/components/input-search"
 // drop-shadow-[0_0_0.5rem_#ffffff70]
 
 export default async function Home() {
@@ -21,10 +20,7 @@ export default async function Home() {
         <p>Segunda, 5 de agosto</p>
 
         <div className="my-6 flex items-center gap-x-2">
-          <Input placeholder="Faça sua busca..." />
-          <Button>
-            <SearchIcon />
-          </Button>
+          <InputSearch />
         </div>
 
         <div className="mb-6 flex space-x-4 overflow-x-auto [&::-webkit-scrollbar]:hidden">
