@@ -2,9 +2,17 @@ import Link from "next/link"
 import { Avatar, AvatarImage } from "./ui/avatar"
 import { Button } from "./ui/button"
 import { SheetClose, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet"
-import { CalendarIcon, HomeIcon, LogOutIcon } from "lucide-react"
+import { CalendarIcon, HomeIcon, LogInIcon, LogOutIcon } from "lucide-react"
 import { quickSearchOptions } from "@/constants/types"
 import Image from "next/image"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog"
 
 export default function SidebarSheet() {
   return (
@@ -14,13 +22,44 @@ export default function SidebarSheet() {
       </SheetHeader>
 
       <div className="flex items-center gap-2 border-b border-solid py-5">
-        <Avatar>
+        <div className="flex w-full items-center justify-between">
+          <h2 className="font-bold">Bem-vindo, faça o seu login!</h2>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size={"icon"}>
+                <LogInIcon size={16} />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Faça login na plataforma</DialogTitle>
+                <DialogDescription>
+                  Conecte-se usando sua conta do Google.
+                </DialogDescription>
+              </DialogHeader>
+              <Button
+                variant={"outline"}
+                size={"sm"}
+                className="gap-x-2 font-bold"
+              >
+                <Image
+                  src="/google.svg"
+                  alt="Fazer login com o Google"
+                  width={18}
+                  height={18}
+                />
+                Google
+              </Button>
+            </DialogContent>
+          </Dialog>
+        </div>
+        {/* <Avatar>
           <AvatarImage src="https://avatars.githubusercontent.com/u/94011588?v=4" />
         </Avatar>
         <div className="flex flex-col">
           <span className="font-bold">Gustavo Tavares</span>
           <span className="text-xs">gt3oliveira@next.com</span>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex flex-col gap-2 border-b border-solid py-5">
