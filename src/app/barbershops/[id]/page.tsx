@@ -77,7 +77,11 @@ export default async function BarberShopPage({ params }: BarberShopPageProps) {
         </h2>
 
         {barberShop.service.map((service: BarbershopService) => (
-          <ServiceItem key={service.id} service={service} />
+          <ServiceItem
+            key={service.id}
+            service={service}
+            barberShop={barberShop}
+          />
         ))}
       </div>
 
