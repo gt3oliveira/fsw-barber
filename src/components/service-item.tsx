@@ -1,7 +1,7 @@
 "use client"
 import { Barbershop, BarbershopService } from "@prisma/client"
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "./ui/button"
 import { formatPrice } from "@/hooks/format-price"
 import { Card, CardContent } from "./ui/card"
@@ -12,13 +12,11 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "./ui/sheet"
 import { Calendar } from "./ui/calendar"
 import { ptBR } from "date-fns/locale"
-import { timeList } from "@/constants/types"
 import { format, set } from "date-fns"
-import { postBooking } from "@/actions/booking"
+import { getBookingsTimesDay, postBooking } from "@/actions/booking"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 
@@ -31,6 +29,20 @@ export function ServiceItem({ service, barberShop }: ServiceItemProps) {
   const { data: session } = useSession()
   const [selectDay, setSelectDay] = useState<Date | undefined>(undefined)
   const [selectTime, setSelectTime] = useState<string | undefined>(undefined)
+  const [timesBookings, setTimesBookings] = useState<string[]>([])
+  const [sheetOpen, setSheetOpen] = useState(false)
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (!selectDay) return
+      const bookings = await getBookingsTimesDay({
+        date: selectDay,
+        serviceId: service.id,
+      })
+      setTimesBookings(bookings)
+    }
+    fetch()
+  }, [selectDay, service.id])
 
   function handleDateSelect(day: Date | undefined) {
     setSelectDay(day)
@@ -38,6 +50,13 @@ export function ServiceItem({ service, barberShop }: ServiceItemProps) {
 
   function handleTimeSelect(time: string | undefined) {
     setSelectTime(time)
+  }
+
+  function handleSheetOpenChange() {
+    setSelectDay(undefined)
+    setSelectTime(undefined)
+    setTimesBookings([])
+    setSheetOpen(false)
   }
 
   async function handleCreateBooking() {
@@ -53,6 +72,7 @@ export function ServiceItem({ service, barberShop }: ServiceItemProps) {
         date: newDate,
       })
 
+      handleSheetOpenChange()
       toast.success("Reserva criada com sucesso!", {
         icon: "💈",
         position: "bottom-center",
@@ -89,12 +109,14 @@ export function ServiceItem({ service, barberShop }: ServiceItemProps) {
               {formatPrice(Number(service.price))}
             </p>
 
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant={"secondary"} size={"sm"}>
-                  Reservar
-                </Button>
-              </SheetTrigger>
+            <Sheet open={sheetOpen} onOpenChange={handleSheetOpenChange}>
+              <Button
+                variant={"secondary"}
+                size={"sm"}
+                onClick={() => setSheetOpen(true)}
+              >
+                Reservar
+              </Button>
               <SheetContent className="overflow-y-auto px-0 [&::-webkit-scrollbar]:hidden">
                 <SheetHeader>
                   <SheetTitle className="px-5 text-left">
@@ -108,6 +130,7 @@ export function ServiceItem({ service, barberShop }: ServiceItemProps) {
                     locale={ptBR}
                     selected={selectDay}
                     onSelect={handleDateSelect}
+                    fromDate={new Date()}
                     styles={{
                       head_cell: {
                         width: "100%",
@@ -136,7 +159,7 @@ export function ServiceItem({ service, barberShop }: ServiceItemProps) {
 
                 {selectDay && (
                   <div className="flex gap-x-4 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
-                    {timeList.map((time) => (
+                    {timesBookings.map((time) => (
                       <Button
                         key={time}
                         variant={selectTime === time ? "default" : "outline"}
@@ -179,7 +202,7 @@ export function ServiceItem({ service, barberShop }: ServiceItemProps) {
                   </Card>
                 )}
 
-                <SheetFooter className="px-5">
+                <SheetFooter className="mt-5 px-5">
                   <SheetClose asChild>
                     <Button
                       onClick={handleCreateBooking}

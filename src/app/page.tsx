@@ -17,7 +17,7 @@ export default async function Home() {
     <div>
       <Header />
       <div className="p-5">
-        <h2 className="text-xl font-bold">Olá, Gustavo Tavares!</h2>
+        <h2 className="text-xl font-bold">Olá, Gustavo!</h2>
         <p>
           {new Date().toLocaleDateString("pt-BR", {
             weekday: "long",

@@ -15,10 +15,10 @@ import {
   DialogTrigger,
 } from "./ui/dialog"
 import { signIn, signOut, useSession } from "next-auth/react"
+import SignInDialog from "./sign-in-dialog"
 
 export default function SidebarSheet() {
   const { data: session } = useSession()
-  const handleLoginWithGoogle = () => signIn("google")
 
   return (
     <SheetContent className="overflow-y-auto [&::-webkit-scrollbar]:hidden">
@@ -37,26 +37,7 @@ export default function SidebarSheet() {
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Faça login na plataforma</DialogTitle>
-                  <DialogDescription>
-                    Conecte-se usando sua conta do Google.
-                  </DialogDescription>
-                </DialogHeader>
-                <Button
-                  variant={"outline"}
-                  size={"sm"}
-                  className="gap-x-2 font-bold"
-                  onClick={handleLoginWithGoogle}
-                >
-                  <Image
-                    src="/google.svg"
-                    alt="Fazer login com o Google"
-                    width={18}
-                    height={18}
-                  />
-                  Google
-                </Button>
+                <SignInDialog />
               </DialogContent>
             </Dialog>
           </div>
@@ -73,49 +54,57 @@ export default function SidebarSheet() {
         )}
       </div>
 
-      <div className="flex flex-col gap-2 border-b border-solid py-5">
-        <SheetClose asChild>
-          <Button className="justify-start gap-2" asChild>
-            <Link href={`/`}>
-              <HomeIcon size={16} />
-              Inicio
-            </Link>
-          </Button>
-        </SheetClose>
-        <Button className="justify-start gap-2" variant={"ghost"}>
-          <CalendarIcon size={16} />
-          Agendamentos
-        </Button>
-      </div>
-
-      <div className="flex flex-col gap-2 border-b border-solid py-5">
-        {quickSearchOptions.map((option) => (
-          <SheetClose key={option.title} asChild>
-            <Button className="justify-start gap-2" variant={"ghost"} asChild>
-              <Link href={`/barbershops?service=${option.title}`}>
-                <Image
-                  src={option.imageUrl}
-                  alt={option.title}
-                  width={16}
-                  height={16}
-                />
-                {option.title}
-              </Link>
+      {session && (
+        <>
+          <div className="flex flex-col gap-2 border-b border-solid py-5">
+            <SheetClose asChild>
+              <Button className="justify-start gap-2" asChild>
+                <Link href={`/`}>
+                  <HomeIcon size={16} />
+                  Inicio
+                </Link>
+              </Button>
+            </SheetClose>
+            <Button className="justify-start gap-2" variant={"ghost"}>
+              <CalendarIcon size={16} />
+              Agendamentos
             </Button>
-          </SheetClose>
-        ))}
-      </div>
+          </div>
 
-      <div className="flex flex-col gap-2 py-5">
-        <Button
-          className="justify-start gap-2 text-red-500 hover:text-red-700"
-          variant={"ghost"}
-          onClick={() => signOut()}
-        >
-          <LogOutIcon size={16} />
-          Sair da conta
-        </Button>
-      </div>
+          <div className="flex flex-col gap-2 border-b border-solid py-5">
+            {quickSearchOptions.map((option) => (
+              <SheetClose key={option.title} asChild>
+                <Button
+                  className="justify-start gap-2"
+                  variant={"ghost"}
+                  asChild
+                >
+                  <Link href={`/barbershops?service=${option.title}`}>
+                    <Image
+                      src={option.imageUrl}
+                      alt={option.title}
+                      width={16}
+                      height={16}
+                    />
+                    {option.title}
+                  </Link>
+                </Button>
+              </SheetClose>
+            ))}
+          </div>
+
+          <div className="flex flex-col gap-2 py-5">
+            <Button
+              className="justify-start gap-2 text-red-500 hover:text-red-700"
+              variant={"ghost"}
+              onClick={() => signOut()}
+            >
+              <LogOutIcon size={16} />
+              Sair da conta
+            </Button>
+          </div>
+        </>
+      )}
     </SheetContent>
   )
 }
