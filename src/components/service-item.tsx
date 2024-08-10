@@ -68,7 +68,6 @@ export function ServiceItem({ service, barberShop }: ServiceItemProps) {
 
       await postBooking({
         serviceId: service.id,
-        userId: (session?.user as any).id,
         date: newDate,
       })
 
