@@ -24,6 +24,7 @@ export async function postBooking(params: BookingsProps) {
     },
   })
   revalidatePath("/barbershops/[id]")
+  revalidatePath("/bookings")
 }
 
 export async function getBookingsTimesDay(props: BookingsProps) {
@@ -75,4 +76,13 @@ export async function getBookings() {
       date: "asc",
     },
   })
+}
+
+export async function deleteBooking(bookingId: string) {
+  await db.booking.delete({
+    where: {
+      id: bookingId,
+    },
+  })
+  revalidatePath("/bookings")
 }
