@@ -6,17 +6,12 @@ import { endOfDay, startOfDay } from "date-fns"
 import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
 
-interface CreateBooking {
-  serviceId: string
-  date: Date
-}
-
-interface GetBookingsProps {
+interface BookingsProps {
   date: Date
   serviceId: string
 }
 
-export async function postBooking(params: CreateBooking) {
+export async function postBooking(params: BookingsProps) {
   const session = await getServerSession(authOptions)
   if (!session) {
     throw new Error("Usuário não autenticado.")
@@ -25,13 +20,13 @@ export async function postBooking(params: CreateBooking) {
   await db.booking.create({
     data: {
       ...params,
-      userId: (session.user as any).id,
+      userId: session.user.id,
     },
   })
   revalidatePath("/barbershops/[id]")
 }
 
-export async function getBookingsTimesDay(props: GetBookingsProps) {
+export async function getBookingsTimesDay(props: BookingsProps) {
   const bookings = await db.booking.findMany({
     where: {
       date: {
@@ -54,4 +49,30 @@ export async function getBookingsTimesDay(props: GetBookingsProps) {
   })
 
   return dateList
+}
+
+export async function getBookings() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user) {
+    throw new Error("Usuário não autenticado.")
+  }
+
+  return await db.booking.findMany({
+    where: {
+      userId: session.user.id,
+      date: {
+        gte: new Date(),
+      },
+    },
+    include: {
+      service: {
+        include: {
+          barbershop: true,
+        },
+      },
+    },
+    orderBy: {
+      date: "asc",
+    },
+  })
 }

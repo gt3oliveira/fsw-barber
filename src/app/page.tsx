@@ -9,12 +9,14 @@ import { InputSearch } from "@/components/input-search"
 import Link from "next/link"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import { getBookings } from "@/actions/booking"
 // drop-shadow-[0_0_0.5rem_#ffffff70]
 
 export default async function Home() {
   const session = await getServerSession(authOptions)
   const barberShops = await getBarberShop()
   const popularBarberShops = await getPopularBarberShop()
+  const bookings = session?.user ? await getBookings() : []
 
   return (
     <div>
@@ -65,10 +67,14 @@ export default async function Home() {
           />
         </div>
 
-        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
-          Agendamentos
-        </h2>
-        <BookingItem />
+        {session?.user && bookings.length > 0 && (
+          <>
+            <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+              Próximo agendamento
+            </h2>
+            <BookingItem booking={bookings[0]} />
+          </>
+        )}
 
         <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
           Recomendados
