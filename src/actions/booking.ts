@@ -44,8 +44,11 @@ export async function getBookingsTimesDay(props: BookingsProps) {
   let dateList: string[] = []
   timeList.map((time) => {
     const hour = Number(time.split(":")[0])
+    const minute = Number(time.split(":")[1])
 
-    const timeIsOnThePast = isPast(set(new Date(), { hours: hour }))
+    const timeIsOnThePast = isPast(
+      set(new Date(), { hours: hour, minutes: minute }),
+    )
 
     if (timeIsOnThePast && isToday(props.date)) {
       return false

@@ -33,6 +33,7 @@ import { deleteBooking } from "@/actions/booking"
 import { redirect } from "next/navigation"
 import { toast } from "sonner"
 import { useState } from "react"
+import BookingSummary from "./booking-summary"
 
 interface BookingsItemProps {
   booking: Prisma.BookingGetPayload<{
@@ -136,35 +137,13 @@ export function BookingItem({ booking }: BookingsItemProps) {
         <div className="border-y border-solid pt-6">
           <Badge className="w-fit">Confirmado</Badge>
 
-          <Card className="mb-6 mt-3">
-            <CardContent className="space-y-1 p-3">
-              <div className="flex justify-between">
-                <h2 className="font-bold">{booking.service.name}</h2>
-                <p className="text-sm font-bold">
-                  {formatPrice(Number(booking.service.price))}
-                </p>
-              </div>
-
-              <div className="flex justify-between">
-                <h2 className="text-sm text-zinc-400">Data</h2>
-                <p className="text-sm">
-                  {format(booking.date, "d 'de' MMMM", { locale: ptBR })}
-                </p>
-              </div>
-
-              <div className="flex justify-between">
-                <h2 className="text-sm text-zinc-400">Horário</h2>
-                <p className="text-sm">
-                  {format(booking.date, "HH:mm", { locale: ptBR })}
-                </p>
-              </div>
-
-              <div className="flex justify-between">
-                <h2 className="text-sm text-zinc-400">Barbearia</h2>
-                <p className="text-sm">{barbershop.name}</p>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="my-5">
+            <BookingSummary
+              barberShop={barbershop}
+              service={booking.service}
+              selectDate={booking.date}
+            />
+          </div>
         </div>
 
         <div className="flex w-full flex-col gap-y-2 border-b border-solid py-5">
