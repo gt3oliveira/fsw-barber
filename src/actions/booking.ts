@@ -2,7 +2,7 @@
 import { timeList } from "@/constants/types"
 import { authOptions } from "@/lib/auth"
 import { db } from "@/lib/prisma"
-import { endOfDay, startOfDay } from "date-fns"
+import { endOfDay, isPast, isToday, set, startOfDay } from "date-fns"
 import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
 
@@ -44,6 +44,13 @@ export async function getBookingsTimesDay(props: BookingsProps) {
   let dateList: string[] = []
   timeList.map((time) => {
     const hour = Number(time.split(":")[0])
+
+    const timeIsOnThePast = isPast(set(new Date(), { hours: hour }))
+
+    if (timeIsOnThePast && isToday(props.date)) {
+      return false
+    }
+
     if (!bookings.find((booking) => booking.date.getHours() === hour)) {
       dateList.push(time)
     }

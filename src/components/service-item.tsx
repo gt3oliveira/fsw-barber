@@ -17,7 +17,6 @@ import { Calendar } from "./ui/calendar"
 import { ptBR } from "date-fns/locale"
 import { format, set } from "date-fns"
 import { getBookingsTimesDay, postBooking } from "@/actions/booking"
-import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 
 interface ServiceItemProps {
@@ -26,14 +25,14 @@ interface ServiceItemProps {
 }
 
 export function ServiceItem({ service, barberShop }: ServiceItemProps) {
-  const { data: session } = useSession()
-  const [selectDay, setSelectDay] = useState<Date | undefined>(undefined)
+  const [selectDay, setSelectDay] = useState<Date | undefined>(new Date())
   const [selectTime, setSelectTime] = useState<string | undefined>(undefined)
   const [timesBookings, setTimesBookings] = useState<string[]>([])
   const [sheetOpen, setSheetOpen] = useState(false)
 
   useEffect(() => {
     const fetch = async () => {
+      setSelectTime(undefined)
       if (!selectDay) return
       const bookings = await getBookingsTimesDay({
         date: selectDay,
@@ -158,16 +157,22 @@ export function ServiceItem({ service, barberShop }: ServiceItemProps) {
 
                 {selectDay && (
                   <div className="flex gap-x-4 overflow-x-auto border-b border-solid p-5 [&::-webkit-scrollbar]:hidden">
-                    {timesBookings.map((time) => (
-                      <Button
-                        key={time}
-                        variant={selectTime === time ? "default" : "outline"}
-                        onClick={() => handleTimeSelect(time)}
-                        className="rounded-full"
-                      >
-                        {time}
-                      </Button>
-                    ))}
+                    {timesBookings.length > 0 ? (
+                      timesBookings.map((time) => (
+                        <Button
+                          key={time}
+                          variant={selectTime === time ? "default" : "outline"}
+                          onClick={() => handleTimeSelect(time)}
+                          className="rounded-full"
+                        >
+                          {time}
+                        </Button>
+                      ))
+                    ) : (
+                      <p className="text-zinc-400">
+                        ❌ Nenhum horário disponível.
+                      </p>
+                    )}
                   </div>
                 )}
 
