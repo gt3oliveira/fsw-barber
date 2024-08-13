@@ -10,6 +10,8 @@ import Link from "next/link"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { getBookings } from "@/actions/booking"
+import { format, getWeek } from "date-fns"
+import { ptBR } from "date-fns/locale"
 // drop-shadow-[0_0_0.5rem_#ffffff70]
 
 export default async function Home() {
@@ -25,13 +27,15 @@ export default async function Home() {
         <h2 className="text-xl font-bold">
           Olá, {session?.user?.name?.split(" ")[0] || "faça seu login"}!
         </h2>
-        <p>
-          {new Date().toLocaleDateString("pt-BR", {
-            weekday: "long",
-            day: "2-digit",
-            month: "long",
-          })}
-        </p>
+        <div>
+          <span className="capitalize">
+            {format(new Date(), "EEEE, dd", { locale: ptBR }).replace(
+              "-feira",
+              "",
+            )}
+          </span>
+          <span>{format(new Date(), "' de' MMMM", { locale: ptBR })}</span>
+        </div>
 
         <div className="my-6 flex items-center gap-x-2">
           <InputSearch />
