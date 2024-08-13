@@ -51,7 +51,7 @@ export default function SidebarSheet() {
         <>
           <div className="flex flex-col gap-2 border-b border-solid py-5">
             <SheetClose asChild>
-              <Button className="justify-start gap-2" asChild>
+              <Button className="justify-start gap-2" variant={"ghost"} asChild>
                 <Link href={`/`}>
                   <HomeIcon size={16} />
                   Inicio

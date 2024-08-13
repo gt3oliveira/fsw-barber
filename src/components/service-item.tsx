@@ -18,6 +18,7 @@ import { ptBR } from "date-fns/locale"
 import { format, set } from "date-fns"
 import { getBookingsTimesDay, postBooking } from "@/actions/booking"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 interface ServiceItemProps {
   service: BarbershopService
@@ -25,6 +26,8 @@ interface ServiceItemProps {
 }
 
 export function ServiceItem({ service, barberShop }: ServiceItemProps) {
+  const router = useRouter()
+
   const [selectDay, setSelectDay] = useState<Date | undefined>(new Date())
   const [selectTime, setSelectTime] = useState<string | undefined>(undefined)
   const [timesBookings, setTimesBookings] = useState<string[]>([])
@@ -74,6 +77,10 @@ export function ServiceItem({ service, barberShop }: ServiceItemProps) {
       toast.success("Reserva criada com sucesso!", {
         icon: "💈",
         position: "bottom-center",
+        action: {
+          label: "Ver agendamentos",
+          onClick: () => router.push("/bookings"),
+        },
       })
     } catch (error) {
       console.log(error)
